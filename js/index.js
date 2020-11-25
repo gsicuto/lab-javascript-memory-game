@@ -1,3 +1,4 @@
+/* eslint-disable arrow-parens */
 const cards = [
   { name: 'aquaman', img: 'aquaman.jpg' },
   { name: 'batman', img: 'batman.jpg' },
@@ -39,11 +40,57 @@ window.addEventListener('load', event => {
   // Add all the divs to the HTML
   document.querySelector('#memory-board').innerHTML = html;
 
+  const clicked = document.getElementById("pairs-clicked");
+  const guessed = document.getElementById("pairs-guessed");
+
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
-      // TODO: write some code here
-      console.log(`Card clicked: ${card}`);
+
+      card.children[0].classList.toggle('front');
+      card.children[0].classList.toggle('back');
+      card.children[1].classList.toggle('front');
+      card.children[1].classList.toggle('back');
+
+      memoryGame.pickedCards.push(card);
+
+      if (memoryGame.pickedCards.length === 2) {
+        const firstCard = memoryGame.pickedCards[0];
+        const secondCard = memoryGame.pickedCards[1];
+
+        const cardName1 = firstCard.getAttribute("data-card-name");
+        const cardName2 = secondCard.getAttribute("data-card-name");
+
+        const validate = memoryGame.checkIfPair(cardName1, cardName2);
+
+        if (!validate) {
+
+          setTimeout(() => {
+            firstCard.children[0].classList.toggle('front');
+            firstCard.children[0].classList.toggle('back');
+            firstCard.children[1].classList.toggle('front');
+            firstCard.children[1].classList.toggle('back');
+
+            secondCard.children[0].classList.toggle('front');
+            secondCard.children[0].classList.toggle('back');
+            secondCard.children[1].classList.toggle('front');
+            secondCard.children[1].classList.toggle('back');
+
+          }, 2000);
+
+          memoryGame.pickedCards = [];
+          
+        } else {
+          firstCard.children[1].classList.add("blocked");
+          secondCard.children[1].classList.add("blocked");
+          memoryGame.pickedCards = [];
+        }
+        
+        clicked.innerHTML = memoryGame.pairsClicked;
+        guessed.innerHTML = memoryGame.pairsGuessed;
+
+      }
+
     });
   });
 });
