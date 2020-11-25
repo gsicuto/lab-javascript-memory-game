@@ -29,4 +29,4 @@ class MemoryGame {
     return this.pairsGuessed === this.cards.length / 2;
   }
 
-}
+};
